@@ -5,6 +5,10 @@ Created by Matej Vanco (2024-2025), https://matejvanco.com (MIT License).
 
 **Grass and Fur** is a complete shell-textured rendering solution that enables you to create grass, fur, and partial hair on any mesh - both static and skinned. It includes a variety of features such as support for skinned meshes, motion vectors, a painting editor, styling tool, masking, coloring, wind constraints, radial interactions, explosions, several optimizations, and more.
 
+[![Discord](https://img.shields.io/discord/778036261733531688?label=Discord&logo=discord&color=5865F2&style=for-the-badge)](https://discord.gg/WdcYHBtCfr)
+[![My Portfolio](https://img.shields.io/badge/Portfolio-MatejVanco.com-4c1d9f?style=for-the-badge&logo=react&logoColor=white)](https://www.matejvanco.com/)
+[![Follow Me on X](https://img.shields.io/badge/Follow_Me_On_X-@matej_vanco-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://x.com/matej_vanco)
+
 ![GnF_Preview-ezgif com-optimize](https://github.com/user-attachments/assets/31633b3b-0d0f-4856-9792-57e9e30162d8)
 
 ### Features

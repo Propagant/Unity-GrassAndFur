@@ -1,0 +1,233 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: mat_GnF_SampleFurWarrok
+  m_Shader: {fileID: 4800000, guid: 84f77860a6dd564458f9c2c7f3f5bf77, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - CUT_EXPO
+  - SHELL_ADVANCED
+  m_InvalidKeywords:
+  - USE_MOTION_TEX
+  - _CULLING_OFF
+  - _SPECULAR_COLOR
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AddColorTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _AlbedoTex:
+        m_Texture: {fileID: 2800000, guid: f9102aaa8dae0414689d91925c98fb1a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DynamicMotionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 36bf7d4d0ce1f4922b5b0fc85baf2281, type: 3}
+        m_Scale: {x: 8, y: 8}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MotionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StyleTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TrackingTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WindTex:
+        m_Texture: {fileID: 2800000, guid: f38a0c7fd4909b940a632d51637d17d6, type: 3}
+        m_Scale: {x: 3, y: 3}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AddAlbOpac: 0.116
+    - _AddAlbTrans: 0.563
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
+    - _BlendModePreserveSpecular: 1
+    - _BumpScale: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
+    - _ColTrans: 1
+    - _Cull: 2
+    - _Culling: 0
+    - _Cutoff: 0.5
+    - _DetailAlbedoMapScale: 1
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _DstBlendAlpha: 0
+    - _EnvironmentReflections: 1
+    - _ExpUVSpace: 0
+    - _ExploImpactRadius: -0.1
+    - _ExploInfluence: 1.69
+    - _ExploIntensity: 0.36
+    - _ExploMagnif: 0
+    - _ExploMagnifThick: 0.1
+    - _ExploPreviewIntens: 0
+    - _ExploPreviewRadius: 3.5
+    - _ExploRadius: 0.91
+    - _ExploSmh: 0.26
+    - _ExploSmoothness: 0.15
+    - _ExploWaveCount: 30
+    - _ExploWaveFreq: 9.22
+    - _ExploWaveOffset: 7
+    - _ExploWaveSize: 23.34
+    - _ExploWiggle: 16
+    - _ExploWiggleFreq: 8.8
+    - _ExploWiggleIntens: 0.6
+    - _ExplosionPreview: 0
+    - _ExpoShellCut: 1
+    - _FadeOutDist: 10
+    - _FadeOutDistSmh: 2
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
+    - _InvertAddAlbedo: 0
+    - _MainTexCut: 2.87
+    - _Metallic: 0
+    - _MinTexCut: 0.715
+    - _MultipAddAlbedo: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.005
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _ShadowOpac: 0.858
+    - _ShdCoverage: -1
+    - _ShdSmh: 0.5
+    - _ShellAdvancedSettings: 1
+    - _ShellCurvatureFreq: 32
+    - _ShellCurvatureIntens: 0.005
+    - _ShellGravity: -0.05
+    - _ShellMotionIntensity: 0
+    - _ShellOffsetInfluence: 3.74
+    - _Smoothness: 0.5
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
+    - _Surface: 0
+    - _TransSmh: 0.245
+    - _UseDistanceFade: 0
+    - _UseDynamicMotionFeature: 0
+    - _UseDynamicMotionTexParam: 0
+    - _UseExplo: 0
+    - _UseMotionTexParam: 1
+    - _UseStyleTexParam: 0
+    - _UseTrackingFeature: 0
+    - _UsesTYLETexParam: 0
+    - _VisibleAddLightCount: 3
+    - _WindIntens: 0.1
+    - _WindSpeed: 0.2
+    - _WorkflowMode: 1
+    - _WorldSpaceUV: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _AddAlbedoTint: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BlitterBrushData0: {r: 0, g: 0, b: 0, a: 0}
+    - _BlitterBrushData1: {r: 0, g: 0, b: 0, a: 0}
+    - _BlitterBrushTemp: {r: 0, g: 0, b: 0, a: 0}
+    - _BotColor: {r: 0.18867922, g: 0.061742768, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorAmbient: {r: 0, g: 0, b: 0, a: 1}
+    - _ColorTint: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ExploPos: {r: 0.7829048, g: 0.6165711, b: 0, a: 0}
+    - _Params: {r: 0.8, g: -0.94, b: 0.5, a: 0.04}
+    - _Pos: {r: 0.4221412, g: -0.20885897, b: 0.43173537, a: 2.0428991}
+    - _ShdTint: {r: 0.4811321, g: 0, b: 0.11724272, a: 1}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _TopColor: {r: 0.24528301, g: 0.16026588, b: 0.042808827, a: 1}
+  m_BuildTextureStacks: []
+--- !u!114 &4171172290411660369
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7

@@ -1,0 +1,173 @@
+// Written by Matej Vanco, April 2024, Updated March 2025.
+
+
+// Kernel directives
+
+#pragma kernel DefaultMeshBuilder
+#pragma kernel SkinnedMeshBuilder16Bits
+#pragma kernel SkinnedMeshBuilder32Bits
+
+// Common data definitions
+
+struct VertexData
+{
+    float3 posWS;
+    float3 normalOS;
+    float2 uv;
+    float offset;
+};
+
+struct InTriangleData
+{
+    VertexData v0;
+    VertexData v1;
+    VertexData v2;
+};
+
+struct OutTriangleData
+{
+    VertexData v[3];
+};
+
+RWStructuredBuffer<OutTriangleData> _OutTriangles : register(u0);
+int _Density;
+float _Offset;
+int _TriangleCount;
+float4x4 _Matrix;
+
+float3 CreateVertexPosition(VertexData entryVertex, float t)
+{
+    return mul(_Matrix, float4(entryVertex.posWS + (entryVertex.normalOS * (t * _Offset)), 1.0)).xyz;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+//////      Static Mesh Builder        /////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+StructuredBuffer<InTriangleData> _InTriangles : register(t0); 
+
+VertexData CreateVertexData(VertexData entryVertex, float t)
+{
+    VertexData vertData = (VertexData)0;
+    vertData.posWS = CreateVertexPosition(entryVertex, t);
+    vertData.normalOS = entryVertex.normalOS;
+    vertData.uv = entryVertex.uv;
+    vertData.offset = t;
+    return vertData;
+}
+
+[numthreads(64, 1, 1)]
+void DefaultMeshBuilder(uint3 id : SV_DispatchThreadID)
+{
+    if ((int)id.x >= _TriangleCount)
+        return;
+
+    InTriangleData currTriangle = _InTriangles[id.x];
+    for (int i = 0; i < _Density; i++)
+    {
+        OutTriangleData wTriangle = (OutTriangleData)0;
+        float t = (float)(i + 1) / (float)_Density;
+        wTriangle.v[0] = CreateVertexData(currTriangle.v0, t);
+        wTriangle.v[1] = CreateVertexData(currTriangle.v1, t);
+        wTriangle.v[2] = CreateVertexData(currTriangle.v2, t);
+        _OutTriangles[id.x * _Density + i] = wTriangle;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+//////      Skinned Mesh Builder        ////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+ByteAddressBuffer _InSkinnedVertexBuffer : register(t1);
+#ifdef SKIN_LOCAL_MOTION_VECTOR
+    RWStructuredBuffer<float3> _InSkinnedPreviousVertexPositions : register(u1);
+#endif
+ByteAddressBuffer _InSkinnedIndiceBuffer : register(t2);
+ByteAddressBuffer _InSkinnedUVBuffer : register(t3);
+int _VertexBufferStride;
+int _VertexBufferNormalsOffset;
+int _VertexBufferUVStride;
+int _VertexBufferUVOffset;
+float _MotionShellInfluence;
+float _MotionIntensity;
+float _SkinScale;
+
+#pragma multi_compile_local _ SKIN_LOCAL_MOTION_VECTOR
+
+uint3 LoadTriangle32BitFormat(uint triIndex)
+{
+    return _InSkinnedIndiceBuffer.Load3(triIndex * 12);
+}
+
+uint3 LoadTriangle16BitFormat(uint triIndex)
+{
+    uint offsetBytes = triIndex * 6;
+    uint dwordAlignedOffset = offsetBytes & ~3;
+    uint2 four16BitIndices = _InSkinnedIndiceBuffer.Load2(dwordAlignedOffset);
+    uint3 indices;
+    if (dwordAlignedOffset == offsetBytes)
+    {
+        indices.x = four16BitIndices.x & 0xffff;
+        indices.y = (four16BitIndices.x >> 16) & 0xffff;
+        indices.z = four16BitIndices.y & 0xffff;
+    }
+    else
+    {
+        indices.x = (four16BitIndices.x >> 16) & 0xffff;
+        indices.y = four16BitIndices.y & 0xffff;
+        indices.z = (four16BitIndices.y >> 16) & 0xffff;
+    }
+    return indices;
+}
+
+VertexData LoadVertexData(uint triIndex, float t)
+{
+    VertexData vertex = (VertexData)0;
+    vertex.posWS = asfloat(_InSkinnedVertexBuffer.Load3(triIndex * _VertexBufferStride)) * _SkinScale;
+    vertex.normalOS = asfloat(_InSkinnedVertexBuffer.Load3((triIndex * _VertexBufferStride + _VertexBufferNormalsOffset)));
+    vertex.uv = asfloat(_InSkinnedUVBuffer.Load2(triIndex * _VertexBufferUVStride + _VertexBufferUVOffset));
+    vertex.offset = t;
+        
+#ifdef SKIN_LOCAL_MOTION_VECTOR
+    float3 prevVertex = vertex.posWS;
+    float3 currVertex = _InSkinnedPreviousVertexPositions[triIndex];
+    float3 dir = currVertex - prevVertex;
+    vertex.posWS += dir * pow(abs(t), max(0.01, _MotionShellInfluence)) * _MotionIntensity;
+    _InSkinnedPreviousVertexPositions[triIndex] = lerp(currVertex, prevVertex, saturate(length(dir) * t));
+#endif
+
+    vertex.posWS = CreateVertexPosition(vertex, t);
+
+    return vertex;
+}
+
+void PopulateTris(uint id, uint3 triIndex)
+{
+    OutTriangleData oTriangle = (OutTriangleData)0;
+    for (int i = 0; i < _Density; i++)
+    {
+        float t = (float)(i + 1) / (float)_Density;
+        oTriangle.v[0] = LoadVertexData(triIndex.x, t);
+        oTriangle.v[1] = LoadVertexData(triIndex.y, t);
+        oTriangle.v[2] = LoadVertexData(triIndex.z, t);
+        _OutTriangles[id.x * _Density + i] = oTriangle;
+    }
+}
+
+[numthreads(64, 1, 1)]
+void SkinnedMeshBuilder16Bits(uint3 id : SV_DispatchThreadID)
+{
+    if ((int)id.x < _TriangleCount)
+        PopulateTris(id.x, LoadTriangle16BitFormat(id.x));
+}
+
+[numthreads(64, 1, 1)]
+void SkinnedMeshBuilder32Bits(uint3 id : SV_DispatchThreadID)
+{
+    if ((int)id.x < _TriangleCount)
+        PopulateTris(id.x, LoadTriangle32BitFormat(id.x) * _VertexBufferStride);
+}

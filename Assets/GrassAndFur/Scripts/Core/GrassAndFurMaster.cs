@@ -752,12 +752,6 @@ namespace GrassAndFur
                 MasterRender();
         }
 
-        private void OnRenderObject()
-        {
-            if (IsSkinnedMesh && !DownsampleFeatureIsValid && Application.isPlaying)
-                MasterRender();
-        }
-
         private void OnEnable()
         {
             if (srcGnFComputeShader == null)
@@ -767,6 +761,9 @@ namespace GrassAndFur
                 MasterInitialize();
             else if(!Application.isPlaying)
                 MasterInitialize();
+
+            if(Application.isPlaying)
+                RenderPipelineManager.beginCameraRendering += RenderPipelineManager_beginCameraRendering;
         }
 
         private IEnumerator Start()
@@ -780,6 +777,14 @@ namespace GrassAndFur
         private void OnDisable()
         {
             Dispose();
+            if (Application.isPlaying)
+                RenderPipelineManager.beginCameraRendering -= RenderPipelineManager_beginCameraRendering;
+        }
+
+        private void RenderPipelineManager_beginCameraRendering(ScriptableRenderContext arg1, Camera arg2)
+        {
+            if (IsSkinnedMesh && !DownsampleFeatureIsValid && Application.isPlaying)
+                MasterRender();
         }
 
         #endregion

@@ -41,6 +41,43 @@ namespace GrassAndFur.UEditor
             preservePaintingEditor = false;
         }
 
+        private string SaveFileDialogPath(string title, string defaultName)
+        {
+            return EditorUtility.SaveFilePanel(title, Application.dataPath, defaultName, "asset");
+        }
+
+        private string GetRelativeAssetPath(string absolutePath)
+        {
+            string projectPath = Application.dataPath;
+            if (!absolutePath.StartsWith(projectPath))
+            {
+                Debug.LogError("Selected path is outside the project!");
+                return string.Empty;
+            }
+            return "Assets" + absolutePath.Substring(projectPath.Length);
+        }
+
+        private Object FindAsset(string assetName)
+        {
+            if (string.IsNullOrWhiteSpace(assetName))
+                return null;
+            var assets = AssetDatabase.FindAssets(assetName);
+            if (assets != null)
+            {
+                if(assets.Length > 1)
+                    EditorUtility.DisplayDialog("Warning", "There are multiple assets with the same name in your project. The first one will be returned", "OK");
+                string guid = assets[0];
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                Object asset = AssetDatabase.LoadAssetAtPath<Object>(path);
+                if (asset != null)
+                    return asset;
+                else
+                    EditorUtility.DisplayDialog("Error", "Could not find an asset in the project. Make sure the reference exists!", "OK");
+            }
+
+            return null;
+        }
+
         public override void OnInspectorGUI()
         {
             if(!master.HasRenderer)
@@ -127,12 +164,21 @@ namespace GrassAndFur.UEditor
                         }
                         Color gcolor = GUI.color;
                         GUI.color = Color.white / 1.1f;
-                        if (GUILayout.Button("Save Mask To Assets", GUILayout.Width(200))
-                        && EditorUtility.DisplayDialog("Are you sure?", "Are you sure to save the mask texture to the assets? There is no undo...", "Yes", "No"))
+                        if (GUILayout.Button("Save Mask To Assets", GUILayout.Width(200)))
                         {
-                            AssetDatabase.CreateAsset(master.CachedMaskTexture, "Assets/maskTexture.asset");
-                            AssetDatabase.Refresh();
-                            EditorUtility.SetDirty(master);
+                            string path = SaveFileDialogPath("Save Mask Texture", master.name + "_mask");
+                            if (string.IsNullOrEmpty(path) == false)
+                            {
+                                AssetDatabase.CreateAsset(master.CachedMaskTexture, GetRelativeAssetPath(path));
+                                AssetDatabase.Refresh();
+                                EditorUtility.SetDirty(master);
+                            }
+                        }
+                        if (string.IsNullOrWhiteSpace(master.CachedMaskTexture.name) == false && GUILayout.Button("Ping Reference", GUILayout.Width(120)))
+                        {
+                            var asset = FindAsset(master.CachedMaskTexture.name);
+                            if(asset != null)
+                                EditorGUIUtility.PingObject(asset);
                         }
                         GUI.color = gcolor;
                         GUILayout.EndHorizontal();
@@ -161,12 +207,21 @@ namespace GrassAndFur.UEditor
                         }
                         Color gcolor = GUI.color;
                         GUI.color = Color.white / 1.1f;
-                        if (GUILayout.Button("Save Add Color To Assets", GUILayout.Width(200))
-                        && EditorUtility.DisplayDialog("Are you sure?", "Are you sure to save the add color texture to the assets? There is no undo...", "Yes", "No"))
+                        if (GUILayout.Button("Save Add Color To Assets", GUILayout.Width(200)))
                         {
-                            AssetDatabase.CreateAsset(master.CachedAddColorTexture, "Assets/addColorTexture.asset");
-                            AssetDatabase.Refresh();
-                            EditorUtility.SetDirty(master);
+                            string path = SaveFileDialogPath("Save Add Color Texture", master.name + "_addColor");
+                            if (string.IsNullOrEmpty(path) == false)
+                            {
+                                AssetDatabase.CreateAsset(master.CachedAddColorTexture, GetRelativeAssetPath(path));
+                                AssetDatabase.Refresh();
+                                EditorUtility.SetDirty(master);
+                            }
+                        }
+                        if (string.IsNullOrWhiteSpace(master.CachedAddColorTexture.name) == false && GUILayout.Button("Ping Reference", GUILayout.Width(120)))
+                        {
+                            var asset = FindAsset(master.CachedAddColorTexture.name);
+                            if (asset != null)
+                                EditorGUIUtility.PingObject(asset);
                         }
                         GUI.color = gcolor;
                         GUILayout.EndHorizontal();
@@ -195,12 +250,21 @@ namespace GrassAndFur.UEditor
                         }
                         Color gcolor = GUI.color;
                         GUI.color = Color.white / 1.1f;
-                        if (GUILayout.Button("Save Style To Assets", GUILayout.Width(200))
-                        && EditorUtility.DisplayDialog("Are you sure?", "Are you sure to save the style texture to the assets? There is no undo...", "Yes", "No"))
+                        if (GUILayout.Button("Save Style To Assets", GUILayout.Width(200)))
                         {
-                            AssetDatabase.CreateAsset(master.CachedStyleTexture, "Assets/styleTexture.asset");
-                            AssetDatabase.Refresh();
-                            EditorUtility.SetDirty(master);
+                            string path = SaveFileDialogPath("Save Style Texture", master.name + "_style");
+                            if (string.IsNullOrEmpty(path) == false)
+                            {
+                                AssetDatabase.CreateAsset(master.CachedStyleTexture, GetRelativeAssetPath(path));
+                                AssetDatabase.Refresh();
+                                EditorUtility.SetDirty(master);
+                            }
+                        }
+                        if (string.IsNullOrWhiteSpace(master.CachedStyleTexture.name) == false && GUILayout.Button("Ping Reference", GUILayout.Width(120)))
+                        {
+                            var asset = FindAsset(master.CachedStyleTexture.name);
+                            if (asset != null)
+                                EditorGUIUtility.PingObject(asset);
                         }
                         GUI.color = gcolor;
                         GUILayout.EndHorizontal();

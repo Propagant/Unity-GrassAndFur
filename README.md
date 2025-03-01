@@ -1,11 +1,11 @@
-![GnF_BannerTop](https://github.com/user-attachments/assets/ad239dcc-aa79-4e62-b4bf-36058cb53851)
+![GnF_BannerTop](https://github.com/user-attachments/assets/030bb59a-c8dd-4dd5-80a7-5b848d91b9d7)
 
 A comprehensive solution for rendering grass and fur in Unity Engine.\
-Created by Matej Vanco (2024-2025) - https://matejvanco.com (MIT License).
+Created by Matej Vanco (2024-2025), https://matejvanco.com (MIT License).
 
 **Grass and Fur** is a complete shell-textured rendering solution that enables you to create grass, fur, and partial hair on any mesh - both static and skinned. It includes a variety of features such as support for skinned meshes, motion vectors, a painting editor, styling tool, masking, coloring, wind constraints, radial interactions, explosions, several optimizations, and more.
 
-![GnF_Header-ezgif com-optimize](https://github.com/user-attachments/assets/f7f63de7-3dc4-4d7f-a635-e5598e7e7126)
+![GnF_Header-ezgif com-optimize](https://github.com/user-attachments/assets/66e1653c-a710-43a5-883e-ef65f291b760)
 
 ### Features
 - Supports both static and skinned meshes  
@@ -16,7 +16,8 @@ Created by Matej Vanco (2024-2025) - https://matejvanco.com (MIT License).
 - Advanced shell settings (curvature, gravity, local motion vectors)  
 - Realtime point, spot, and directional light support (per-pixel/per-object)  
 - Traditional Lambertian shading model with cascaded shadow map sampling  
-- Various optimization techniques (distance-based culling, frame downsampling)  
+- Various optimization techniques (distance-based culling, frame downsampling)
+- GPU accelerated 
 - URP Batcher compatible  
 - URP fog compatible  
 - Supports both Forward and Deferred rendering paths  
@@ -44,10 +45,10 @@ Created by Matej Vanco (2024-2025) - https://matejvanco.com (MIT License).
 
 # Projects Using Grass And Fur
 - Hulda (first person action game)\
-![GnF_Game_Hulda-ezgif com-optimize](https://github.com/user-attachments/assets/bf50161f-b7c3-44eb-b3ad-52ded3057220)
+![GnF_Game_Hulda-ezgif com-optimize](https://github.com/user-attachments/assets/537e559c-834f-4d44-adc6-d25cef30429d)
 
 - Wanderers (roguelite scifi action game)\
-![GnF_Game_Wnd-ezgif com-optimize](https://github.com/user-attachments/assets/8232915e-3418-422d-896a-35386993d73f)
+![GnF_Game_Wnd-ezgif com-optimize](https://github.com/user-attachments/assets/80e915bc-10b4-4af6-8fcf-e5fe0b972dba)
 
 ---
 
@@ -73,11 +74,11 @@ Created by Matej Vanco (2024-2025) - https://matejvanco.com (MIT License).
 Grass and Fur provides various options to control the final appearance and behavior of your grass/fur.\
 You can modify these settings in two places:  
 
-- The **GrassAndFurMaster** component  
+- The **Grass And Fur Master** component  
 - The **Grass And Fur** material
 
 ## Grass And Fur Master Component  
-The **GrassAndFurMaster** component is the main controller for grass and fur behavior. It includes two key parameters that influence the overall look:
+The **Grass And Fur Master** component is the main controller for grass and fur behavior. It includes two key parameters that influence the overall look:
 - `Density` determines how many shell layers (chunks) are generated for the mesh. Higher values create a denser effect but increase performance costs.  
 - `Offset` defines the spacing between shell layers. Adjust this based on your mesh’s scale for optimal results.  
 
@@ -115,7 +116,7 @@ Style painting shifts the UVs of individual shell layers, creating a more organi
 - This feature must be enabled to use a **Style Texture** in your material.  
 - The amount of UV shifting and its effect on the mesh can be adjusted within the material settings.  
 
-![GnF_Painting-ezgif com-optimize](https://github.com/user-attachments/assets/b48cab9d-66c8-4b69-900e-e8141f112af9)
+![GnF_Painting-ezgif com-optimize](https://github.com/user-attachments/assets/90ab5e05-8a0b-48de-84d0-3bad4daf4ddc)
 
 > [!TIP]
 > It is **highly recommended** to save painted textures as assets. Saving them within the scene increases scene size and does not create a reusable reference in the project. Once you're satisfied with your painted textures, be sure to **save them as assets**.
@@ -154,8 +155,8 @@ To use these interaction features, they must be **manually enabled** in the mate
 
 Shader will allocate additional uniforms to properly handle the enabled interaction features.
 
-![GnF_Interactions-ezgif com-optimize](https://github.com/user-attachments/assets/ee4244a6-9bc5-4bc0-a6b3-ca99740233a1)
-![GnF_Interactions2-ezgif com-optimize](https://github.com/user-attachments/assets/ca55d5cd-78f2-4eda-8bc0-e6919ade0257)
+![GnF_Interactions-ezgif com-optimize](https://github.com/user-attachments/assets/0aa51900-b1f5-47e2-a9b1-01d673661690)
+![GnF_Interactions2-ezgif com-optimize](https://github.com/user-attachments/assets/2375f94d-484e-46da-846f-cffff521e194)
 
 
 # Optimizations  
@@ -171,7 +172,7 @@ In order to use the downsampling feature, select your universal render asset and
 > [!WARNING]
 > Since the **downsampled** Grass and Fur shader does not support **depth writing**, some third-party post-processing effects (such as volumetric lighting or dof) may not function correctly. This does not apply to non-donwsampled frame.
 
-![Downsampling Example](https://github.com/user-attachments/assets/36e77a45-8079-4f00-aef1-9f6b68715215)  
+![GnF_Opti01-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/7ed4bf48-c100-4ced-b616-f59ad0cca2f9)
 
 ## Distance-Based Fadeout  
 The **Distance-Based Fadeout** feature gradually fades out fur/grass layers based on the camera's distance. This can be enabled in the material settings and helps optimize performance by:  
@@ -180,5 +181,5 @@ The **Distance-Based Fadeout** feature gradually fades out fur/grass layers base
 
 This option can be found on your GnF material under **Shell Settings** header.
 
-![GnF_Opti02-ezgif com-optimize](https://github.com/user-attachments/assets/6376dd0f-7b60-41f6-8926-49f241b2f169)
+![GnF_Opti02-ezgif com-optimize](https://github.com/user-attachments/assets/d5a2e976-9744-4ea5-894e-d212df52bb80)
 

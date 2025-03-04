@@ -46,6 +46,7 @@ Created by Matej Vanco (2024-2025), https://matejvanco.com (MIT License).
 - Not tested in VR (should work, but unverified) 
 - Minimum supported Unity version is 2022 (2021 might work but is deprecated)
 - Not suitable for large scenes and many meshes
+- Meshes using Grass And Fur must be properly unwrapped
 
 # Projects Using Grass And Fur
 - Hulda (first person action game)\

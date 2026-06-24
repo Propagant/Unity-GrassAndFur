@@ -61,15 +61,25 @@ Contact: matovanco122@gmail.com
 ---
 
 # Content
-1. [Setup](#setup)
-2. [How To Use](#how-to-use)
+1. [Installation](#installation)
+2. [Setup](#setup)
+3. [How To Use](#how-to-use)
     - [Grass And Fur Master Component](#grass-and-fur-master-component)
     - [Painting](#painting)
     - [Grass and Fur Material](#grass-and-fur-material)
     - [Interactions](#interactions)
-3. [Optimizations](#optimizations)
+4. [Optimizations](#optimizations)
      - [Downsampling](#downsampling)
      - [Distance-Based Fadeout](#distance-based-fadeout)
+
+# Installation
+Install this UPM package through Unity Package Manager using this Git URL:
+
+```text
+https://github.com/mitay-walle/com.propagant.grass-and-fur.git
+```
+
+In Unity, open **Window > Package Manager**, press **+**, choose **Install package from Git URL**, paste the URL, and install. Unity's official documentation: [Install a UPM package from a Git URL](https://docs.unity3d.com/6000.1/Documentation/Manual/upm-ui-giturl.html).
 
 # Setup  
 1. Select a GameObject that has either a **Mesh Filter** or a **Skinned Mesh Renderer** (ensure the mesh source has **Read/Write Enabled**).  

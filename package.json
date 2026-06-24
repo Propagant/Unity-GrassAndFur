@@ -1,0 +1,34 @@
+{
+  "name": "com.propagant.grass-and-fur",
+  "version": "1.0.0",
+  "displayName": "Grass And Fur",
+  "description": "Shell-textured grass and fur rendering solution for Unity URP.",
+  "unity": "2022.3",
+  "license": "MIT",
+  "licensesUrl": "https://github.com/Propagant/Unity-GrassAndFur/blob/main/LICENSE",
+  "documentationUrl": "https://github.com/Propagant/Unity-GrassAndFur#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Propagant/Unity-GrassAndFur.git"
+  },
+  "author": {
+    "name": "Matej Vanco",
+    "email": "matovanco122@gmail.com",
+    "url": "https://matejvanco.com"
+  },
+  "dependencies": {
+    "com.unity.render-pipelines.universal": "14.0.10"
+  },
+  "samples": [
+    {
+      "displayName": "Examples",
+      "description": "Example scenes, materials, models, painted textures, and sample interaction scripts.",
+      "path": "Samples~/Examples"
+    },
+    {
+      "displayName": "Default Textures",
+      "description": "Reusable fur, pattern, noise, Voronoi, and wind textures for Grass And Fur materials.",
+      "path": "Samples~/Default Textures"
+    }
+  ]
+}

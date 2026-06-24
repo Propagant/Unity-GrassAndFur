@@ -1,0 +1,20 @@
+{
+    "name": "GrassAndFur.Samples.Editor",
+    "rootNamespace": "GrassAndFur.Samples.Editor",
+    "references": [
+        "GrassAndFur",
+        "GrassAndFur.Editor",
+        "GrassAndFur.Samples"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

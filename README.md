@@ -2,6 +2,9 @@
 
 A comprehensive solution for rendering grass and fur in Unity Engine.\
 Created by Matej Vanco (2024-2025), https://matejvanco.com (MIT License).
+Original source: https://github.com/Propagant/Unity-GrassAndFur
+Original license: https://github.com/Propagant/Unity-GrassAndFur/blob/main/LICENSE
+Contact: matovanco122@gmail.com
 
 **Grass and Fur** is a complete shell-textured rendering solution that enables you to create grass, fur, and partial hair on any mesh - both static and skinned. It includes a variety of features such as support for skinned meshes, motion vectors, a painting editor, styling tool, masking, coloring, wind constraints, radial interactions, explosions, several optimizations, and more.
 
@@ -58,15 +61,25 @@ Created by Matej Vanco (2024-2025), https://matejvanco.com (MIT License).
 ---
 
 # Content
-1. [Setup](#setup)
-2. [How To Use](#how-to-use)
+1. [Installation](#installation)
+2. [Setup](#setup)
+3. [How To Use](#how-to-use)
     - [Grass And Fur Master Component](#grass-and-fur-master-component)
     - [Painting](#painting)
     - [Grass and Fur Material](#grass-and-fur-material)
     - [Interactions](#interactions)
-3. [Optimizations](#optimizations)
+4. [Optimizations](#optimizations)
      - [Downsampling](#downsampling)
      - [Distance-Based Fadeout](#distance-based-fadeout)
+
+# Installation
+Install this UPM package through Unity Package Manager using this Git URL:
+
+```text
+https://github.com/mitay-walle/com.propagant.grass-and-fur.git
+```
+
+In Unity, open **Window > Package Manager**, press **+**, choose **Install package from Git URL**, paste the URL, and install. Unity's official documentation: [Install a UPM package from a Git URL](https://docs.unity3d.com/6000.1/Documentation/Manual/upm-ui-giturl.html).
 
 # Setup  
 1. Select a GameObject that has either a **Mesh Filter** or a **Skinned Mesh Renderer** (ensure the mesh source has **Read/Write Enabled**).  
@@ -151,7 +164,7 @@ There are two primary methods for interacting with grass and fur:
 1. **Radial Interactions (Realtime Tracking Feature)** – Requires a world position and a world-space radius to influence the grass/fur dynamically.  
 2. **Radial Explosions (Planar Explosion Feature)** – Uses an explosion data container to simulate an explosive force affecting the grass/fur.  
 
-Example scripts demonstrating these interactions are included in `ExampleContent/Scripts/Extras/Modifiers`  
+Example scripts demonstrating these interactions are included in `Samples~/Examples/Scripts/Runtime/Modifiers`  
 
 ### Enabling Interactions  
 To use these interaction features, they must be **manually enabled** in the material settings:  

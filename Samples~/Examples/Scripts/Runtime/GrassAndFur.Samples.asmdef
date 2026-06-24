@@ -1,0 +1,16 @@
+{
+    "name": "GrassAndFur.Samples",
+    "rootNamespace": "GrassAndFur.Samples",
+    "references": [
+        "GrassAndFur"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

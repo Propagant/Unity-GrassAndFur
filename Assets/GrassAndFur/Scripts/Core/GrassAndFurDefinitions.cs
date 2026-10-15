@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 using UnityEngine;
@@ -185,6 +185,7 @@ namespace GrassAndFur
         public const string SHADER_MASTER_EXPLOSIONS_DATA0_PROP = "_ExplosionsData0";
         public const string SHADER_MASTER_EXPLOSIONS_DATA1_PROP = "_ExplosionsData1";
         public const string SHADER_MASTER_VISIBLE_ADDLIGHTS_COUNT = "_VisibleAddLightCount";
+        public const string SHADER_MASTER_DOWNSAMPLE_VALUE = "_DownsampleValue";
 
         public const string SHADER_MASTER_DOWNSAMPLE_FEATURE = "DOWNSAMPLE";
         public const string SHADER_MASTER_TRACKING_FEATURE = "USE_TRACKING_FEATURE";

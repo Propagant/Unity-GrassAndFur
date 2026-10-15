@@ -1,4 +1,4 @@
-#ifndef GRASS_AND_FUR_VERT_FRAG
+﻿#ifndef GRASS_AND_FUR_VERT_FRAG
 #define GRASS_AND_FUR_VERT_FRAG
 
 Varyings VertexStage(uint id : SV_VertexID)
@@ -16,8 +16,7 @@ Varyings VertexStage(uint id : SV_VertexID)
     currVertex.posWS.y += _ShellGravity * shellOffset;
 #endif
     o.posWS = currVertex.posWS;
-    o.posCS = TransformWorldToHClip(currVertex.posWS);
-
+    o.posCS = TransformWorldToHClip(o.posWS);
 #ifdef DOWNSAMPLE
     o.posSC = ComputeScreenPos(o.posCS);
 #endif

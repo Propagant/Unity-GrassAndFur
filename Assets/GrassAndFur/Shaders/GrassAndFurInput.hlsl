@@ -1,4 +1,4 @@
-#ifndef GRASS_AND_FUR_INPUT
+﻿#ifndef GRASS_AND_FUR_INPUT
 #define GRASS_AND_FUR_INPUT
 
 struct VertexData
@@ -33,6 +33,9 @@ StructuredBuffer<OutTriangleData> _OutTriangles;
     static const uint MAX_EXPLOSIONS = 8;
     uniform float4 _ExplosionsData0[MAX_EXPLOSIONS];    // uv coords = xy, uv-space explosion radius = z, uv-space explosion intensity
     uniform float4 _ExplosionsData1[MAX_EXPLOSIONS];    // explosion time = x, uv-space explosion radius blend = y, explosion impact cut intensity = z, wave frequency = w
+#endif
+#ifdef DOWNSAMPLE
+    uniform float _DownsampleValue;
 #endif
 
 TEXTURE2D(_AlbedoTex);

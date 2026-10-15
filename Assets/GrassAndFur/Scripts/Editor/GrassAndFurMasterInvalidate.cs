@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -33,7 +33,7 @@ namespace GrassAndFur.UEditor
 
         private static void InitGnFs()
         {
-            foreach (GrassAndFurMaster master in Object.FindObjectsOfType<GrassAndFurMaster>())
+            foreach (GrassAndFurMaster master in Object.FindObjectsByType<GrassAndFurMaster>(FindObjectsSortMode.None))
                 master.MasterInitialize();
         }
     }

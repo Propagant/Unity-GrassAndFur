@@ -1,4 +1,4 @@
-#ifndef GRASS_AND_FUR_COMMON
+﻿#ifndef GRASS_AND_FUR_COMMON
 #define GRASS_AND_FUR_COMMON
 
 #define EPSILON 1.0e-4
@@ -34,6 +34,27 @@ half3 CalculateAdditionalLights(in Varyings i, float4 shadowCoord)
     half3 col = half3(0., 0., 0.);
 
 #ifdef _ADDITIONAL_LIGHTS
+    
+    InputData inputData = (InputData)0;
+    inputData.positionWS = i.posWS;
+    inputData.normalWS = i.normalWS;
+    inputData.viewDirectionWS = GetWorldSpaceNormalizeViewDir(i.posWS);
+    inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(i.posCS * 
+    #ifdef DOWNSAMPLE
+        _DownsampleValue
+    #else
+        1.0
+    #endif
+    );
+    
+    #if USE_CLUSTER_LIGHT_LOOP
+        UNITY_LOOP for (uint lindx = 0; lindx < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lindx++)
+        {
+            Light light = GetAdditionalLight(lindx,  i.posWS, shadowCoord);
+            col += CalculateLambert(i, light) * light.distanceAttenuation;
+        }
+    #endif
+    
     #if UNITY_VERSION < 202200
         uint meshRenderingLayers = GetMeshRenderingLightLayer();
     #else
@@ -44,10 +65,10 @@ half3 CalculateAdditionalLights(in Varyings i, float4 shadowCoord)
         LIGHT_LOOP_BEGIN(uint(GetAdditionalLightsCount()))
             Light light = GetAdditionalLight(lightIndex, i.posWS, shadowCoord);
     #else
-        LIGHT_LOOP_BEGIN(uint(_VisibleAddLightCount))
+        LIGHT_LOOP_BEGIN(uint(_VisibleAddLightCount)) 
             Light light = GetAdditionalPerObjectLight(lightIndex, i.posWS);
     #endif
-
+     
     #ifdef _LIGHT_LAYERS
         if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
     #endif
@@ -58,6 +79,7 @@ half3 CalculateAdditionalLights(in Varyings i, float4 shadowCoord)
             col += CalculateLambert(i, light) * light.distanceAttenuation;
         }
     LIGHT_LOOP_END
+    
 #endif
 
     return col;

@@ -8,6 +8,7 @@ Created by Matej Vanco (2024-2025), https://matejvanco.com (MIT License).
 ![GnF_Header-ezgif com-optimize](https://github.com/user-attachments/assets/66e1653c-a710-43a5-883e-ef65f291b760)
 
 ### Features
+- Unity URP 6 Render Graph compatible
 - Supports both static and skinned meshes  
 - User-friendly painting editor  
 - Readable API with useful utilities  
@@ -19,8 +20,8 @@ Created by Matej Vanco (2024-2025), https://matejvanco.com (MIT License).
 - Various optimization techniques (distance-based culling, frame downsampling)
 - GPU accelerated 
 - URP Batcher compatible  
-- URP fog compatible  
-- Supports both Forward and Deferred rendering paths  
+- URP fog compatible
+- Supports both Forward and Deferred rendering paths (including +)
 - Production-tested  
 - Includes example content  
 - Open-source!
@@ -33,7 +34,6 @@ Created by Matej Vanco (2024-2025), https://matejvanco.com (MIT License).
 - No specular highlights/reflections/SSS
 - No physics and rigidbody detections
 - Not suitable for hair simulation or individual hair strand rendering  
-- Not compatible with Forward+ rendering path
 - No advanced frustum culling
 - No Gi
 

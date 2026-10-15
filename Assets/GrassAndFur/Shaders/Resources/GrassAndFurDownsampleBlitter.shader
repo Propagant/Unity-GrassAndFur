@@ -1,4 +1,4 @@
-Shader "Hidden/Grass And Fur/GrassAndFurDownsampleBlitter"
+﻿Shader "Hidden/Grass And Fur/GrassAndFurDownsampleBlitter"
 {
     Properties
     { }
@@ -28,8 +28,7 @@ Shader "Hidden/Grass And Fur/GrassAndFurDownsampleBlitter"
             half4 frag (Varyings input) : SV_Target
             {
                 half4 tColor = SAMPLE_TEXTURE2D(_GnFFrame, sampler_GnFFrame, input.texcoord);
-                return lerp(SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, input.texcoord),
-                    half4(tColor.rgb, 1), tColor.a);
+                return lerp(SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, input.texcoord), half4(tColor.rgb, 1), tColor.a);
             }
 
             ENDHLSL

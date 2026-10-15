@@ -1,7 +1,7 @@
-Shader "Matej Vanco/Grass And Fur Shader"
+﻿Shader "Matej Vanco/Grass And Fur Shader"
 {
     /*
-    Copyright 2024/2025 Matej Vanco (https://matejvanco.com)
+    Copyright 2024/2025/2026 Matej Vanco (https://matejvanco.com)
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,8 @@ Shader "Matej Vanco/Grass And Fur Shader"
     - Downsampling feature support through renderer features
     - URP Batcher compatible
     - URP Fog compatible
-    - Forward/Deferred rendering path compatible
+    - URP Unity 6+ RenderGraph compatible
+    - Forward/Deferred rendering path compatible (including +)
 
     Tech limitations:
     - No WebGL support
@@ -46,7 +47,6 @@ Shader "Matej Vanco/Grass And Fur Shader"
     - No depth & shadow writing
     - No specular highlights/reflections/SSS
     - No HDRP/BuiltIn support
-    - Not compatible with Forward+ rendering path
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     */
@@ -142,6 +142,7 @@ Shader "Matej Vanco/Grass And Fur Shader"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile _ _LIGHT_LAYERS
+            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
             #pragma multi_compile_fog
 
             #pragma shader_feature_local ADD_ALBEDO_INVERT
@@ -154,11 +155,12 @@ Shader "Matej Vanco/Grass And Fur Shader"
             #pragma shader_feature_local DISTANCE_FADE
             #pragma shader_feature_local DOWNSAMPLE
 
-            // URP only for now:)
             #define UNITY_URP
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"                        
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RealtimeLights.hlsl"
 
 #ifdef DOWNSAMPLE
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"

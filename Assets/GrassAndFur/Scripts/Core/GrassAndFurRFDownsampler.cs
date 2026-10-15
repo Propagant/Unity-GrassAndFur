@@ -1,8 +1,11 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+#if UNITY_6000_0_OR_NEWER
+using UnityEngine.Rendering.RenderGraphModule;
+#endif
 
 namespace GrassAndFur
 {
@@ -10,7 +13,7 @@ namespace GrassAndFur
 
     /// <summary>
     /// Custom renderer feature for Grass And Fur downsampling - compatible with Unity URP 2021 (deprecated) and 2022 or NEWER.
-    /// Written by Matej Vanco, May 2024.
+    /// Written by Matej Vanco, May 2024. Updated on 15th of October 2026
     /// </summary>
     public sealed class GrassAndFurRFDownsampler : ScriptableRendererFeature
     {
@@ -70,7 +73,7 @@ namespace GrassAndFur
             indirectDrawingData.Clear();
         }
 
-#if UNITY_2022_1_OR_NEWER
+#if UNITY_2022_1_OR_NEWER && !UNITY_6000_0_OR_NEWER
         public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
             => SetupRP(renderer);
 #endif
@@ -92,6 +95,10 @@ namespace GrassAndFur
 #if !UNITY_2022_1_OR_NEWER
                 SetupRP(renderer);
 #endif
+
+#if UNITY_6000_0_OR_NEWER
+                SetupRP(renderer);
+#endif
                 renderer.EnqueuePass(renderPass);
             }
         }
@@ -101,9 +108,11 @@ namespace GrassAndFur
             if (renderPass == null)
                 return;
 
+#if !UNITY_6000_0_OR_NEWER
             renderPass.ConfigureInput(ScriptableRenderPassInput.Color);
+#endif
 
-#if UNITY_2022_1_OR_NEWER
+#if UNITY_2022_1_OR_NEWER && !UNITY_6000_0_OR_NEWER
             renderPass.SetRTs(renderer.cameraColorTargetHandle);
 #endif
             indirectDrawingData.Clear();
@@ -140,15 +149,18 @@ namespace GrassAndFur
             private List<IndirectDrawingData> indirectDrawingData;
 
             private readonly Settings settings;
+#if !UNITY_6000_0_OR_NEWER
             private readonly ProfilingSampler profiler;
-
+#endif
             private Material blittableMaterial;
 
-#if UNITY_2022_1_OR_NEWER
-            private RTHandle colorRT;
-            private RTHandle tempRT;
-#else
-            private RenderTargetHandle srcTempHandle;
+#if !UNITY_6000_0_OR_NEWER
+    #if UNITY_2022_1_OR_NEWER
+                    private RTHandle colorRT;
+                    private RTHandle tempRT;
+    #else
+                    private RenderTargetHandle srcTempHandle;
+    #endif
 #endif
 
             public RenderPass(Settings cachedSettings)
@@ -156,7 +168,9 @@ namespace GrassAndFur
                 settings = cachedSettings;
                 renderPassEvent = cachedSettings.renderEvent;
 
+#if !UNITY_6000_0_OR_NEWER
                 profiler = new ProfilingSampler(PROFILING_NAME);
+#endif
 
                 AllocMat();
 
@@ -177,7 +191,7 @@ namespace GrassAndFur
             public void EnqueueDrawingData(List<IndirectDrawingData> data)
                 => indirectDrawingData = data;
 
-#if UNITY_2022_1_OR_NEWER
+#if UNITY_2022_1_OR_NEWER && !UNITY_6000_0_OR_NEWER
             public void SetRTs(RTHandle handle)
                 => colorRT = handle;
 
@@ -208,11 +222,138 @@ namespace GrassAndFur
                 }
             }
 #endif
+
+
+#if UNITY_6000_0_OR_NEWER
+
+            private sealed class GraphPassData
+            {
+                internal TextureHandle sceneColorSrc;
+                internal TextureHandle sceneColorTarget;
+                internal TextureHandle sceneDepthTarget;
+                internal Material blittableMaterial;
+                internal List<IndirectDrawingData> indirectDrawingData;
+                internal int lightCount;
+                internal float downsampleValue;
+            }
+
+            private sealed class BlitPassData
+            {
+                internal TextureHandle source;
+                internal Material blittableMaterial;
+            }
+
+            public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
+            {
+                if (blittableMaterial == null)
+                    AllocMat();
+                if (blittableMaterial == null || indirectDrawingData == null || indirectDrawingData.Count == 0)
+                    return;
+
+                UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
+                UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
+                UniversalLightData lightData = frameData.Get<UniversalLightData>();
+
+                RenderTextureDescriptor mainSceneColorDesc = cameraData.cameraTargetDescriptor;
+                mainSceneColorDesc.depthBufferBits = 0;
+
+                TextureHandle gnfTex;
+
+                using (var builder = renderGraph.AddRasterRenderPass<GraphPassData>(PROFILING_NAME, out var data))
+                {
+                    data.sceneColorSrc = resourceData.activeColorTexture;
+                    builder.UseTexture(data.sceneColorSrc);
+
+                    float downsample = Mathf.Clamp(settings.downsample, 1f, 16f);
+
+                    int width = Mathf.FloorToInt(mainSceneColorDesc.width / downsample);
+                    int height = Mathf.FloorToInt(mainSceneColorDesc.height / downsample);
+
+                    var desc = mainSceneColorDesc;
+                    desc.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_UNorm;
+                    desc.width = width;
+                    desc.height = height;
+
+                    gnfTex = data.sceneColorTarget = UniversalRenderer.CreateRenderGraphTexture(
+                        renderGraph,
+                        desc,
+                        BLIT_SHADER_PROP_TEXB,
+                        true,
+                        FilterMode.Bilinear,
+                        TextureWrapMode.Clamp);
+
+                    var depthDesc = desc;
+                    depthDesc.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.None;
+                    depthDesc.depthStencilFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.D32_SFloat;
+                    depthDesc.depthBufferBits = 32;
+                    data.sceneDepthTarget = UniversalRenderer.CreateRenderGraphTexture(
+                        renderGraph,
+                        depthDesc,
+                        BLIT_SHADER_PROP_TEXB + "Depth",
+                        true,
+                        FilterMode.Point,
+                        TextureWrapMode.Clamp);
+
+                    data.blittableMaterial = blittableMaterial;
+                    data.indirectDrawingData = indirectDrawingData;
+                    data.lightCount = lightData.additionalLightsCount;
+                    data.downsampleValue = downsample;
+
+                    builder.SetRenderAttachment(data.sceneColorTarget, 0);
+                    builder.SetRenderAttachmentDepth(data.sceneDepthTarget, AccessFlags.ReadWrite);
+
+                    builder.AllowPassCulling(false);
+                    builder.SetRenderFunc((GraphPassData graphData, RasterGraphContext context) => ExecuteGraphPass(graphData, context));
+                }
+
+                var source = gnfTex;
+                var destination = resourceData.activeColorTexture;
+
+                using (var builder = renderGraph.AddRasterRenderPass<BlitPassData>(PROFILING_NAME + "_Composite", out var data))
+                {
+                    data.source = source;
+                    data.blittableMaterial = blittableMaterial;
+
+                    builder.UseTexture(data.source);
+                    builder.SetRenderAttachment(destination, 0);
+
+                    builder.AllowPassCulling(false);
+
+                    builder.SetRenderFunc((BlitPassData data, RasterGraphContext context) => ExecuteBlitGraphPass(data, context));
+                }
+            }
+
+            private static void ExecuteGraphPass(GraphPassData data, RasterGraphContext context)
+            {
+                foreach (var dat in data.indirectDrawingData)
+                {
+                    if (dat.gnfMaterial == null)
+                        continue;
+
+                    dat.gnfMaterial.SetFloat(SHADER_MASTER_VISIBLE_ADDLIGHTS_COUNT, data.lightCount);
+                    dat.gnfMaterial.SetFloat(SHADER_MASTER_DOWNSAMPLE_VALUE, data.downsampleValue);
+
+                    context.cmd.DrawProceduralIndirect(
+                        dat.matrix,
+                        dat.gnfMaterial,
+                        0,
+                        MeshTopology.Triangles,
+                        dat.indirectArgs);
+                }
+
+            }
+
+            private static void ExecuteBlitGraphPass(BlitPassData data, RasterGraphContext context)
+            {
+                data.blittableMaterial.SetTexture(BLIT_SHADER_PROP_TEXB, data.source);
+                Blitter.BlitTexture(context.cmd, data.source, new Vector4(1, 1, 0, 0), data.blittableMaterial, 0);
+            }
+
+#else
             public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
                 if (blittableMaterial == null)
                     AllocMat();
-
                 if (blittableMaterial == null || indirectDrawingData == null || indirectDrawingData.Count == 0)
                     return;
 
@@ -236,7 +377,7 @@ namespace GrassAndFur
 
                     cmd.SetRenderTarget(srcTempHandle.id);
                     cmd.ClearRenderTarget(true, true, Color.clear);
-#endif                    
+#endif
                     foreach (var data in indirectDrawingData)
                     {
                         if (data.gnfMaterial == null)
@@ -263,6 +404,7 @@ namespace GrassAndFur
                 context.ExecuteCommandBuffer(cmd);
                 CommandBufferPool.Release(cmd);
             }
+#endif
 
 #if !UNITY_2022_1_OR_NEWER
             public override void FrameCleanup(CommandBuffer cmd)
@@ -275,7 +417,7 @@ namespace GrassAndFur
             {
                 indirectDrawingData?.Clear();
 
-#if UNITY_2022_1_OR_NEWER
+#if UNITY_2022_1_OR_NEWER && !UNITY_6000_0_OR_NEWER
                 tempRT?.Release();
 #endif
 

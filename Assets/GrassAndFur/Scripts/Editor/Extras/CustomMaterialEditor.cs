@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 namespace GrassAndFur.UEditor
@@ -50,7 +50,11 @@ namespace GrassAndFur.UEditor
 
             for (int i = 0; i < properties.Length; i++)
             {
+#if UNITY_6000_0_OR_NEWER
+                if (properties[i].propertyFlags != UnityEngine.Rendering.ShaderPropertyFlags.HideInInspector)
+#else
                 if (properties[i].flags != MaterialProperty.PropFlags.HideInInspector)
+#endif
                     ProcessCustomAttributes(properties[i], i, materialEditor, currentMaterial, properties);
             }
 
@@ -62,8 +66,13 @@ namespace GrassAndFur.UEditor
         private void ProcessCustomAttributes(in MaterialProperty currentProperty, in int index, in MaterialEditor matEditor, in Material matSender, in MaterialProperty[] matProps)
         {
             string propName = currentProperty.name;
-            
-            bool propIsTexture = currentProperty.type == MaterialProperty.PropType.Texture;
+
+            bool propIsTexture =
+#if UNITY_6000_0_OR_NEWER
+                currentProperty.propertyType == UnityEngine.Rendering.ShaderPropertyType.Texture;
+#else
+                currentProperty.type == MaterialProperty.PropType.Texture;
+#endif
             string[] propAttributes = matSender.shader.GetPropertyAttributes(index);
 
             bool drawDefaultProperty = true;
@@ -133,19 +142,35 @@ namespace GrassAndFur.UEditor
         {
             for (int i = 0; i < valuesToCompare.Length; i++)
             {
+#if UNITY_6000_0_OR_NEWER
+                switch(prop.propertyType)
+#else
                 switch(prop.type)
+#endif
                 {
+#if UNITY_6000_0_OR_NEWER
+                    case UnityEngine.Rendering.ShaderPropertyType.Float:
+#else
                     case MaterialProperty.PropType.Float:
+                    #endif
                         if (prop.floatValue.ToString() == valuesToCompare[i])
                             return true;
                         break;
 
+#if UNITY_6000_0_OR_NEWER
+                    case UnityEngine.Rendering.ShaderPropertyType.Int:
+#else
                     case MaterialProperty.PropType.Int:
+#endif
                         if (prop.intValue.ToString() == valuesToCompare[i])
                             return true;
                         break;
 
+#if UNITY_6000_0_OR_NEWER
+                    case UnityEngine.Rendering.ShaderPropertyType.Texture:
+#else
                     case MaterialProperty.PropType.Texture:
+#endif
                         if (prop.textureValue != null && valuesToCompare[i] == "1")
                             return true;
                         break;
@@ -237,6 +262,6 @@ namespace GrassAndFur.UEditor
         
         private void DrawIdentMinus() => EditorGUI.indentLevel--;
         
-        #endregion
+#endregion
     }
 }
